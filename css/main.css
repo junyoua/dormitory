@@ -5,9 +5,31 @@
   text-decoration: none;
   list-style: none;
 }
-
-:root{
+/*暗夜模式*/
+:root[data-theme=dark]{
+  --blue:#1a1a1a;
+  --navblue:#fff;
+  --green:#67C23A;
+  --yellow:#E6A23C;
+  --red:#F56C6C;
+  --grey:#909399;
+  --black:#999999;
+  --border:#E4E7ED;
+  --border-bottom: #636363;
+  --white: #f5f5f5;
+  --footerwhite:#1a1a1a;
+  --loginbg:#1a1a1a;
+  --login-shadow:#2e1e1e;
+  --tips:#fff;
+  --bg:#f5f5f5;
+  --navbg: #898383;
+  --nav: #898383;
+  --loginimg:#ebeef5;
+}
+/*白天模式*/
+:root[data-theme=light]{
   --blue:#409EFF;
+  --navblue:#409EFF;
   --green:#67C23A;
   --yellow:#E6A23C;
   --red:#F56C6C;
@@ -16,10 +38,16 @@
   --border:#E4E7ED;
   --border-bottom:#ebe9e9;
   --white:#FFFFFF;
+  --login-shadow:#f1f1f1;
+  --footerwhite:#FFFFFF;
+  --loginbg:#F1F1F1;
   --tips:#444444;
   --bg:#f6f8fb;
   --navbg:#409EFF;
+  --nav:#f6f8fb;
+  --loginimg:#fafafa;
 }
+
 
 .test-enter-active,
 .test-leave-active {

@@ -1,5 +1,47 @@
 <template>
  <div class="class">
+   <div class="box">
+     <!--添加-->
+     <el-button
+       size="medium"
+       type="primary"
+       class="add"
+       @click="dialogFormVisible = true"
+     >
+       <i class="el-icon-edit" /> 添 加 数 据
+     </el-button>
+     <el-dialog title="添加" :visible.sync="dialogFormVisible">
+       <div class="block">
+         <el-form>
+           <el-form-item label="所属学校 :">
+             <el-select v-model="school" placeholder="请选择所属学校">
+               <template v-for="(item,index) in schooldata">
+                 <el-option :key="index" :label="item.label" :value="item.value" />
+               </template>
+             </el-select>
+           </el-form-item>
+         </el-form>
+       </div>
+       <div class="block">
+         <el-form>
+         <span class="demonstration">班 级：</span>
+         <el-input
+           v-model="c_name"
+           placeholder="请输入需要添加的班级名称"
+           clearable
+         />
+         </el-form>
+       </div>
+       <div slot="footer" class="dialog-footer">
+         <el-button @click="dialogFormVisible = false">
+           取 消
+         </el-button>
+         <el-button type="primary" @click="submit">
+           确 定
+         </el-button>
+       </div>
+     </el-dialog>
+     <!--添加结束-->
    <el-table
      stripe
      :data="classdata"
@@ -39,7 +81,7 @@
          <el-button
            size="medium"
            type="primary"
-           @click="open(scope.row.id)"
+           @click="open(scope.row.id, scope.row.class_name)"
          >修改
          </el-button>
          <el-popconfirm
@@ -54,6 +96,7 @@
      </el-table-column>
    </el-table>
  </div>
+ </div>
 </template>
 
 <script>
@@ -61,7 +104,12 @@ export default {
   name: 'class',
   data () {
     return {
-      classdata: []
+      classdata: [],
+      schooldata: [],
+      school: null,
+      c_name: null,
+      dialogTableVisible: false,
+      dialogFormVisible: false
     }
   },
   created () {
@@ -71,6 +119,10 @@ export default {
     getclass () {
       this.$axios.post('api/api/studentclass/index').then((res) => {
         this.classdata = res.data.data.rows
+        this.classdata.reverse()
+      })
+      this.$axios.post('api/api/of/shool_selectpage').then((res) => {
+        this.schooldata = res.data.data.rows
       })
     },
     handleDelete (id) {
@@ -88,6 +140,64 @@ export default {
           })
         }
       })
+    },
+    // 修改
+    open (id, classname) {
+      this.$prompt('请输入修改的班级名称', '修改班级名称', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputValue: classname
+      }).then(({ value }) => {
+        this.handleUpdata(id, value)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消输入'
+        })
+      })
+    },
+    handleUpdata (id, name) {
+      this.$axios.post('api/api/studentclass/edit', { id, name }).then((res) => {
+        if (res.data.code === 200) {
+          this.getclass()
+          this.$message({
+            message: 'Tips:信息修改成功！',
+            type: 'success'
+          })
+        } else {
+          this.$message({
+            message: 'Tips:信息修改失败！',
+            type: 'error'
+          })
+        }
+      })
+    },
+    submit () {
+      if (this.c_name) {
+        this.$axios.post('api/api/studentclass/add', {
+          name: this.c_name,
+          school_of: this.school
+        }).then((res) => {
+          if (res.data.code === 200) {
+            this.dialogFormVisible = false
+            this.getclass()
+            this.$message({
+              message: 'Tips:数据添加成功！',
+              type: 'success'
+            })
+          } else {
+            this.$message({
+              message: 'Tips:数据添加失败！',
+              type: 'error'
+            })
+          }
+        })
+      } else {
+        this.$message({
+          message: 'Tips:请把数据填写完整再添加！',
+          type: 'error'
+        })
+      }
     }
   }
 }
@@ -105,6 +215,20 @@ export default {
       margin-right: 0;
       margin-bottom: 0;
       width: 100%;
+    }
+    .box {
+      width: 100%;
+      height: auto;
+      background-color: var(--white);
+
+      .add {
+        margin: 20px 25px;
+        float: right;
+      }
+
+      .block {
+        margin: 15px 0;
+      }
     }
   }
 </style>

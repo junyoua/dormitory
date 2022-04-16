@@ -24,7 +24,7 @@
             <el-form-item label="宿 舍 :">
               <el-select v-model="dormitory" placeholder="请选择宿舍">
                 <template v-for="(item,index) in dormitorydata">
-                  <el-option :key="index" :label="item.label" :value="item.value" />
+                  <el-option :key="index" :label="item.name" :value="item.id" />
                 </template>
               </el-select>
             </el-form-item>
@@ -59,8 +59,12 @@
         </div>
         <div class="block">
           <span class="demonstration">性 别：</span>
-          <el-radio v-model="radio" label="0">男</el-radio>
-          <el-radio v-model="radio" label="1">女</el-radio>
+          <el-radio v-model="radio" label="0">
+            男
+          </el-radio>
+          <el-radio v-model="radio" label="1">
+            女
+          </el-radio>
         </div>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">
@@ -71,12 +75,69 @@
           </el-button>
         </div>
       </el-dialog>
+      <el-dialog title="修改" :visible.sync="dialogFormVisible1">
+        <div class="block">
+          <span class="demonstration">楼 层：</span>
+          <el-cascader
+            v-model="value"
+            placeholder="请选择楼层"
+            :options="floor"
+          />
+        </div>
+        <div class="block">
+          <el-form>
+            <el-form-item label="宿 舍 :">
+              <el-select v-model="dormitory" placeholder="请选择宿舍">
+                <template v-for="(item,index) in dormitorydata">
+                  <el-option :key="index" :label="item.name" :value="item.id" />
+                </template>
+              </el-select>
+            </el-form-item>
+          </el-form>
+        </div>
+        <div class="block">
+          <el-form>
+            <el-form-item label="班 级 :">
+              <el-select v-model="student_class" placeholder="请选择班级">
+                <template v-for="(item,index) in studentclass">
+                  <el-option :key="index" :label="item.label" :value="item.value" />
+                </template>
+              </el-select>
+            </el-form-item>
+          </el-form>
+        </div>
+        <div class="block">
+          <span class="demonstration">名 字：</span>
+          <el-input
+            v-model="s_name"
+            placeholder="请输入学生名字"
+            clearable
+          />
+        </div>
+        <div class="block">
+          <span class="demonstration">性 别：</span>
+          <el-radio v-model="radio" label="0">
+            男
+          </el-radio>
+          <el-radio v-model="radio" label="1">
+            女
+          </el-radio>
+        </div>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">
+            取 消
+          </el-button>
+          <el-button type="primary" @click="submit1">
+            确 定
+          </el-button>
+        </div>
+      </el-dialog>
       <!--添加结束-->
       <el-table
         stripe
         :data="student"
         style="width: 100%"
-        :default-sort="{prop: 'date', order: 'descending'}"
+        :default-sort = "{prop: 'student_number', order: 'ascending'}"
       >
         <el-table-column
           prop="student_number"
@@ -113,7 +174,7 @@
             <el-button
               size="medium"
               type="primary"
-              @click="open(scope.row.id)"
+              @click="handleUpdata(scope.row.id,scope.row.name,scope.row.sex,scope.row.class_name,scope.row.dormitory_name)"
             >
               修改
             </el-button>
@@ -147,11 +208,13 @@ export default {
       dormitory: null,
       radio: '0',
       s_number: null,
+      s_id: null,
       s_name: null,
       studentclass: [],
       student_class: null,
       dialogTableVisible: false,
-      dialogFormVisible: false
+      dialogFormVisible: false,
+      dialogFormVisible1: false
     }
   },
   watch: {
@@ -159,19 +222,31 @@ export default {
       if (newName[2]) {
         // 宿舍
         const id = newName[2]
-        this.$axios.post('api/api/dormitory/selectpage', { id }).then((res) => {
+        this.$axios.post('api/api/dormitory/student_selectpage', { id }).then((res) => {
           this.dormitorydata = res.data.data.rows
         })
+      }
+    },
+    dialogFormVisible1 (newdata) {
+      if (newdata === false) {
+        this.id = this.s_name = this.student_class = this.dormitory = this.value = ''
+        this.radio = '0'
       }
     }
   },
   created () {
     this.getstudent()
   },
+  computed: {
+    fclass () {
+      return this.studentclass.filter(item => JSON.stringify(item).includes(this.student_class))
+    }
+  },
   methods: {
     getstudent () {
       this.$axios.post('api/api/studentclass/student').then((res) => {
         this.student = res.data.data.rows
+        this.student.reverse()
       })
       // 楼层
       this.$axios.get('api/api/of/selectpage').then((res) => {
@@ -181,6 +256,14 @@ export default {
       this.$axios.get('api/api/studentclass/selectpage').then((res) => {
         this.studentclass = res.data.data.rows
       })
+    },
+    handleUpdata (id, name, sex, classname, dormitoryname) {
+      this.dialogFormVisible1 = true
+      this.s_id = id
+      this.s_name = name
+      this.radio = sex
+      this.student_class = classname
+      this.dormitory = dormitoryname
     },
     handleDelete (id) {
       this.$axios.post('api/api/studentclass/student_del', { id }).then((res) => {
@@ -197,6 +280,37 @@ export default {
           })
         }
       })
+    },
+    submit1 () {
+      if (this.s_id !== null && this.s_name !== null && this.radio !== null && this.student_class !== null && this.dormitory !== null) {
+        this.$axios.post('api/api/studentclass/student_edit', {
+          'row[id]': this.s_id,
+          'row[name]': this.s_name,
+          'row[sex]': this.radio,
+          'row[class_id]': this.fclass[0].value,
+          'row[dormitory_id]': this.dormitory
+        }).then((res) => {
+          if (res.data.code === 200) {
+            this.dialogFormVisible1 = false
+            this.getstudent()
+            this.$message({
+              message: 'Tips:数据修改成功！',
+              type: 'success'
+            })
+          } else {
+            this.$message({
+              message: 'Tips:数据修改失败！',
+              type: 'error'
+            })
+          }
+        })
+      } else {
+        this
+          .$message({
+            message: 'Tips:请把数据填写完整再修改！',
+            type: 'error'
+          })
+      }
     },
     submit () {
       if (this.dormitory && this.student_class && this.s_number && this.s_name && this.radio) {

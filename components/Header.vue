@@ -1,7 +1,20 @@
 <template>
  <div id="Header">
    <div class="w">
-     <div class="main"><img :src="header.img" alt=""><h4>{{header.title}}</h4></div>
+     <div class="main">
+       <img :src="header.img" alt="logo" title="logo">
+       <h4>{{header.title}}</h4>
+       <el-switch
+         class="switch"
+         v-model="value"
+         active-color="#13ce66"
+         active-text="暗夜模式"
+         active-value="1"
+         inactive-value="0"
+         @change="updata"
+         >
+       </el-switch>
+     </div>
    </div>
  </div>
 </template>
@@ -14,6 +27,33 @@ export default {
       header: {
         title: '宿舍管理系统',
         img: 'https://dcdn.it120.cc/2022/04/09/5a97fb1f-98cc-48b4-ae54-b257cf2e8c8d.png'
+      },
+      value: this.$store.state.dark
+    }
+  },
+  methods: {
+    updata () {
+      if ((this.value !== this.$store.state.dark) && this.value !== null) {
+        this.$axios.post('api/api/user/switch', {
+          status: this.value
+        }).then((res) => {
+          const that = this
+          if (res.data.code === 200 && this.value === '1') {
+            this.$message({
+              message: 'Tips:暗夜模式启动成功',
+              type: 'success'
+            })
+            this.$store.commit('updark', this.value)
+            that.$router.go(0)
+          } else {
+            this.$message({
+              message: 'Tips:暗夜模式关闭成功',
+              type: 'success'
+            })
+            this.$store.commit('updark', this.value)
+            this.$router.go(0)
+          }
+        })
       }
     }
   }
@@ -57,6 +97,12 @@ export default {
           text-align: center;
           font-size: 22px;
           color: var(--white);
+        }
+        .switch{
+          display: block;
+          /deep/.el-switch__label *{
+            color: var(--white);
+          }
         }
       }
     }

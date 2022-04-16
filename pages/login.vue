@@ -19,10 +19,10 @@
                 placeholder="请输入密码"
                 maxlength="16"
                 show-password
-                @blur="passwdblur"
+                @keyup.enter.native="login"
               />
             </label>
-            <el-button class="btn" type="primary" :disabled="isShow" @click.native="login"  >
+            <el-button class="btn" type="primary" :disabled="isShow" @click.native="login">
               登录
             </el-button>
             <p class="tips" @click="regisiter">
@@ -47,6 +47,13 @@ export default {
       isShow: false,
       namestate: false,
       passwdstate: false
+    }
+  },
+  watch: {
+    passwd (data) {
+      if (data.length >= 6) {
+        this.passwdblur()
+      }
     }
   },
   methods: {
@@ -104,9 +111,12 @@ export default {
               message: 'Tips:登录成功!',
               type: 'success'
             })
-            this.$router.push('/')
             const token = res.data.data.userinfo.token
+            const dark = res.data.data.userinfo.is_dark
             this.$store.commit('uptoken', token)
+            this.$store.commit('updark', dark)
+            that.$router.push('/')
+            sessionStorage.setItem('reload', '1')
           } else {
             this.$message({
               message: 'Tips:登录失败，请确认学校以及账号密码!',
@@ -131,7 +141,7 @@ export default {
   height: 100vh;
   margin: 0;
   position: relative;
-  background-color: var(--bg);
+  background-color: var(--loginbg)!important;
 
   .l-main {
     width: 80%;
@@ -142,7 +152,7 @@ export default {
     transform: translateX(-50%) translateY(-50%);
     border-radius: 5px;
     border: 1px solid var(--border);
-    box-shadow: 1px 10px 10px #f1f1f1;
+    box-shadow: 1px 10px 10px var(--login-shadow);
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -150,6 +160,7 @@ export default {
     .lmain-left {
       flex: 1;
       height: 100%;
+      background-color: var(--loginimg);
 
       .img {
         width: 100%;

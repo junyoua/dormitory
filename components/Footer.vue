@@ -30,7 +30,7 @@ export default {
    height: 150px;
    overflow: hidden;
    opacity: .8;
-   background-color: var(--white);
+   background-color: var(--footerwhite);
    .w{
      width: 80%;
      margin: 0 auto;

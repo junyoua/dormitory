@@ -7,7 +7,7 @@
        </div>
        <nuxt class="nuxt"/>
      </div>
-     <Footer v-if="notLogin&&notRegister&&notError"/>
+     <Footer />
    </div>
 </template>
 

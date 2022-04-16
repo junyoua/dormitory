@@ -135,12 +135,16 @@ export default {
       width: 100%;
       /deep/.el-radio-button__inner{
         width: 100%;
-        padding: 12px 0;
+        height: 55px;
+        padding: 13px 0;
         border-left: 0;
         border-right: 0;
         color:var(--white);
         background-color: var(--navbg);
         border-bottom: 1px solid var(--border);
+        i{
+          line-height: 30px;
+        }
       }
     }
   }

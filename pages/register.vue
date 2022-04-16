@@ -191,7 +191,7 @@ export default {
   height: 100vh;
   margin: 0;
   position: relative;
-  background-color: var(--bg);
+  background-color: var(--loginbg)!important;
 
   .l-main {
     width: 80%;
@@ -202,7 +202,7 @@ export default {
     transform: translateX(-50%) translateY(-50%);
     border-radius: 5px;
     border: 1px solid var(--border);
-    box-shadow: 1px 10px 10px #f1f1f1;
+    box-shadow: 1px 10px 10px var(--login-shadow);
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -210,6 +210,7 @@ export default {
     .lmain-left {
       flex: 1;
       height: 100%;
+      background-color: var(--loginimg);
 
       .img {
         width: 100%;

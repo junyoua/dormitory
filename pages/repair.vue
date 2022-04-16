@@ -15,14 +15,79 @@
           <span class="demonstration">楼 层：</span>
           <el-cascader
             v-model="value"
-            :options="dormitory"
+            placeholder="请选择楼层"
+            :options="floordata"
+          />
+        </div>
+        <div class="block">
+          <el-form>
+            <el-form-item label="宿 舍 :">
+              <el-select v-model="dormitory" placeholder="请选择宿舍">
+                <template v-for="(item,index) in dormitorydata">
+                  <el-option :key="index" :label="item.label" :value="item.value" />
+                </template>
+              </el-select>
+            </el-form-item>
+          </el-form>
+        </div>
+        <div class="block">
+          <span class="demonstration">类 型：</span>
+          <el-input
+            v-model="w_type"
+            placeholder="请输入维修类型"
+            clearable
+          />
+        </div>
+        <div class="block">
+          <span class="demonstration">内 容：</span>
+          <el-input
+            v-model="w_content"
+            placeholder="请输入维修内容"
+            clearable
           />
         </div>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">
             取 消
           </el-button>
-          <el-button type="primary" @click="dialogFormVisible = false">
+          <el-button type="primary" @click="submit">
+            确 定
+          </el-button>
+        </div>
+      </el-dialog>
+      <el-dialog title="修改" :visible.sync="dialogFormVisible1">
+        <div class="block">
+          <span class="demonstration">类 型：</span>
+          <el-input
+            v-model="w_type"
+            placeholder="请输入维修类型"
+            clearable
+          />
+        </div>
+        <div class="block">
+          <span class="demonstration">内 容：</span>
+          <el-input
+            v-model="w_content"
+            placeholder="请输入维修内容"
+            clearable
+          />
+        </div>
+        <div class="block">
+          <el-radio v-model="w_status" label="0">
+            已上报
+          </el-radio>
+          <el-radio v-model="w_status" label="1">
+            已维修
+          </el-radio>
+          <el-radio v-model="w_status" label="2">
+            无法维修
+          </el-radio>
+        </div>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible1 = false">
+            取 消
+          </el-button>
+          <el-button type="primary" @click="submit1">
             确 定
           </el-button>
         </div>
@@ -49,7 +114,6 @@
           <template slot-scope="scope">
             <el-tag
               type="danger"
-              effect="label"
             >
               {{ scope.row.type }}
             </el-tag>
@@ -96,7 +160,7 @@
             <el-button
               size="medium"
               type="primary"
-              @click="open(scope.row.id)"
+              @click="handleUpdata(scope.row.id,scope.row.type,scope.row.content,scope.row.status)"
             >
               修改
             </el-button>
@@ -124,10 +188,34 @@ export default {
     return {
       repair: [],
       value: [],
-      dormitory: [],
+      dormitorydata: [],
+      floordata: [],
+      dormitory: null,
+      w_type: null,
+      w_id: null,
+      w_content: null,
+      w_status: null,
       dialogTableVisible: false,
+      dialogTableVisible1: false,
       dialogFormVisible: false,
+      dialogFormVisible1: false,
       formLabelWidth: '120px'
+    }
+  },
+  watch: {
+    value (newName) {
+      if (newName[2]) {
+        // 宿舍
+        const id = newName[2]
+        this.$axios.post('api/api/dormitory/selectpage', { id }).then((res) => {
+          this.dormitorydata = res.data.data.rows
+        })
+      }
+    },
+    dialogFormVisible1 (newdata) {
+      if (newdata === false) {
+        this.w_id = this.w_type = this.w_content = this.w_status = ''
+      }
     }
   },
   created () {
@@ -137,10 +225,19 @@ export default {
     getrepair () {
       this.$axios.get('api/api/dormitory/repair').then((res) => {
         this.repair = res.data.data.rows
+        this.repair.reverse()
       })
+      // 楼层
       this.$axios.get('api/api/of/selectpage').then((res) => {
-        this.dormitory = res.data.data.rows
+        this.floordata = res.data.data.rows
       })
+    },
+    handleUpdata (id, type, content, status) {
+      this.dialogFormVisible1 = true
+      this.w_id = id
+      this.w_type = type
+      this.w_content = content
+      this.w_status = status
     },
     handleDelete (id) {
       this.$axios.post('api/api/dormitory/repair_del', { id }).then((res) => {
@@ -157,6 +254,66 @@ export default {
           })
         }
       })
+    },
+    submit1 () {
+      if (this.w_id && this.w_type && this.w_content && this.w_status) {
+        this.$axios.post('api/api/dormitory/repair_edit', {
+          'row[id]': this.w_id,
+          'row[type]': this.w_type,
+          'row[content]': this.w_content,
+          'row[status]': this.w_status
+        }).then((res) => {
+          if (res.data.code === 200) {
+            this.dialogFormVisible1 = false
+            this.getrepair()
+            this.$message({
+              message: 'Tips:数据修改成功！',
+              type: 'success'
+            })
+          } else {
+            this.$message({
+              message: 'Tips:数据修改失败！',
+              type: 'error'
+            })
+          }
+        })
+      } else {
+        this.$message({
+          message: 'Tips:请把数据填写完整再修改！',
+          type: 'error'
+        })
+      }
+    },
+    submit () {
+      if (this.dormitory && this.w_type && this.w_content) {
+        this.$axios.post('api/api/dormitory/repair_add', {
+          dormitory_id: this.dormitory,
+          type: this.w_type,
+          content: this.w_content,
+          image: ''
+        }).then((res) => {
+          if (res.data.code === 200) {
+            this.dialogFormVisible = false
+            // 清空选择值
+            this.dormitory = this.w_type = this.w_content = ''
+            this.getrepair()
+            this.$message({
+              message: 'Tips:数据添加成功！',
+              type: 'success'
+            })
+          } else {
+            this.$message({
+              message: 'Tips:数据添加失败！',
+              type: 'error'
+            })
+          }
+        })
+      } else {
+        this.$message({
+          message: 'Tips:请把数据填写完整再添加！',
+          type: 'error'
+        })
+      }
     }
   }
 }
@@ -176,6 +333,9 @@ export default {
     .add {
       margin: 20px 25px;
       float: right;
+    }
+    .block {
+      margin: 15px 0;
     }
   }
 }
