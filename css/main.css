@@ -1,62 +1,141 @@
-*,body,html{
+@charset "UTF-8";
+
+*, body, html {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   text-decoration: none;
   list-style: none;
 }
+html{
+  min-width: 375px;
+}
+
+/*白天模式*/
+:root[data-theme=light] {
+  --blue: #409EFF;
+  --navblue: #409EFF;
+  --green: #67C23A;
+  --yellow: #E6A23C;
+  --red: #F56C6C;
+  --grey: #909399;
+  --black: #303133;
+  --border: #E4E7ED;
+  --border-bottom: #ebe9e9;
+  --white: #FFFFFF;
+  --login-shadow: #f1f1f1;
+  --footerwhite: #FFFFFF;
+  --tips: #444444;
+  --bg: #f6f8fb;
+  --nuxtbg: #f6f8fb;
+  --navbg: #409EFF;
+  --nav: #f6f8fb;
+  --loginimg: #fafafa;
+  --errorbg: #fff;
+  --tabnavbgcolor: transparent;
+  --tabnavcolor: #909399;
+  --tabbgcolor: #fff;
+  --tabbgcolorhover: #EBEEF5;
+  --whitebg: #f6f8fb;
+  --menu_item: #303133;
+  --h5conter: #fff;
+  --dialog: #FFF;
+}
+
 /*暗夜模式*/
-:root[data-theme=dark]{
-  --blue:#1a1a1a;
-  --navblue:#fff;
-  --green:#67C23A;
-  --yellow:#E6A23C;
-  --red:#F56C6C;
-  --grey:#909399;
-  --black:#999999;
-  --border:#E4E7ED;
+:root[data-theme=dark] {
+  --blue: #1a1a1a;
+  --navblue: #fff;
+  --green: #67C23A;
+  --yellow: #E6A23C;
+  --red: #F56C6C;
+  --grey: #909399;
+  --black: #999999;
+  --border: #E4E7ED;
   --border-bottom: #636363;
   --white: #f5f5f5;
-  --footerwhite:#1a1a1a;
-  --loginbg:#1a1a1a;
-  --login-shadow:#2e1e1e;
-  --tips:#fff;
-  --bg:#f5f5f5;
+  --whitebg: #474747;
+  --footerwhite: #1a1a1a;
+  --login-shadow: #2e1e1e;
+  --tips: #fff;
+  --bg: #f5f5f5;
+  --nuxtbg: #474747;
   --navbg: #898383;
   --nav: #898383;
-  --loginimg:#ebeef5;
+  --loginimg: #ebeef5;
+  --errorbg: #1a1a1a;
+  --tabnavbgcolor: #3b3838;
+  --tabnavcolor: #fff;
+  --tabbgcolor: #5d5d5d;
+  --tabbgcolorhover: #d2baba;
+  --menu_item: #f5f5f5;
+  --h5conter: #2b2a2a;
+  --dialog: #eae8e8;
 }
-/*白天模式*/
-:root[data-theme=light]{
-  --blue:#409EFF;
-  --navblue:#409EFF;
-  --green:#67C23A;
-  --yellow:#E6A23C;
-  --red:#F56C6C;
-  --grey:#909399;
-  --black:#303133;
-  --border:#E4E7ED;
-  --border-bottom:#ebe9e9;
-  --white:#FFFFFF;
-  --login-shadow:#f1f1f1;
-  --footerwhite:#FFFFFF;
-  --loginbg:#F1F1F1;
-  --tips:#444444;
-  --bg:#f6f8fb;
-  --navbg:#409EFF;
-  --nav:#f6f8fb;
-  --loginimg:#fafafa;
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.5s;
 }
 
-
-.test-enter-active,
-.test-leave-active {
-  transition: opacity 0.3s;
-}
-.test-enter,
-.test-leave-active {
+.page-enter,
+.page-leave-active {
   opacity: 0;
 }
-.cell{
+
+.cell {
   text-align: center;
+}
+
+.el-dialog {
+  background-color: var(--dialog);
+}
+
+.el-menu {
+  background-color: var(--h5conter);
+  border: none;
+}
+
+.el-table th .el-table__cell {
+  color: var(--tabnavcolor) !important;
+  background-color: var(--tabnavbgcolor) !important;
+}
+
+.el-table .el-table__cell {
+  background-color: var(--tabnavbgcolor) !important;
+}
+
+.el-table tr, .el-table__row--striped td.el-table__cell {
+  color: var(--tabnavcolor) !important;
+  background-color: var(--tabbgcolor) !important;
+}
+
+.el-table--enable-row-hover .el-table__body tr:hover > td.el-table__cell {
+  background-color: var(--tabbgcolorhover) !important;
+}
+
+
+.el-descriptions__body, .el-descriptions-item__label.is-bordered-label {
+  color: var(--tabnavcolor);
+  background-color: var(--nuxtbg);
+}
+
+.el-progress__text, .el-descriptions__title, .el-icon-arrow-right {
+  color: var(--tabnavcolor);
+}
+
+.el-submenu__title span, .el-menu-item span {
+  color: var(--menu_item);
+}
+.item:last-child{
+  border-bottom:none!important;
+}
+
+@media screen and (max-width: 750px) {
+  .el-message-box {
+    width: 375px !important;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 }

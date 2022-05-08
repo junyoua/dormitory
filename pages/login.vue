@@ -2,16 +2,22 @@
   <div class="login">
     <div class="l-main">
       <div class="lmain-left">
-        <div v-pre class="img" />
+        <div v-pre class="img"/>
       </div>
       <div class="lmain-right">
         <div class="form-Box">
           <h4 v-pre>
             用户登录
           </h4>
-          <div class="form">
+          <form class="form">
             <label>账号：
-              <el-input v-model="name" placeholder="请输入账号" maxlength="16" clearable @blur="nameblur" />
+              <el-input v-model="name"
+                        ref="name"
+                        placeholder="请输入账号"
+                        maxlength="16"
+                        clearable
+                        @blur="nameblur"
+              />
             </label>
             <label>密码：
               <el-input
@@ -28,7 +34,7 @@
             <p class="tips" @click="regisiter">
               还没有账号？<span>去注册></span>
             </p>
-          </div>
+          </form>
         </div>
       </div>
     </div>
@@ -40,6 +46,9 @@
 export default {
   name: 'Login',
   transition: 'test',
+  head: {
+    title: '登录 - 宿舍管理系统'
+  },
   data () {
     return {
       name: '',
@@ -55,6 +64,9 @@ export default {
         this.passwdblur()
       }
     }
+  },
+  mounted () {
+    this.$refs.name.focus()
   },
   methods: {
     handleCommand (command) {
@@ -113,6 +125,7 @@ export default {
             })
             const token = res.data.data.userinfo.token
             const dark = res.data.data.userinfo.is_dark
+            localStorage.setItem('token', token)
             this.$store.commit('uptoken', token)
             this.$store.commit('updark', dark)
             that.$router.push('/')
@@ -141,7 +154,6 @@ export default {
   height: 100vh;
   margin: 0;
   position: relative;
-  background-color: var(--loginbg)!important;
 
   .l-main {
     width: 80%;
@@ -212,12 +224,14 @@ export default {
             margin: 20px 0;
             letter-spacing: 10px;
           }
-          .tips{
+
+          .tips {
             margin-top: 5px;
             cursor: pointer;
             text-align: center;
             letter-spacing: 2px;
-            span{
+
+            span {
               color: var(--red);
             }
           }

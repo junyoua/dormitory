@@ -2,25 +2,32 @@
   <div class="register">
     <div class="l-main">
       <div class="lmain-left">
-        <div v-pre class="img" />
+        <div v-pre class="img"/>
       </div>
       <div class="lmain-right">
         <div class="form-Box">
           <h4 v-pre>
             用户注册
           </h4>
-          <div class="form">
+          <form class="form">
             <label>所在学校：
-              <el-input v-model="school" placeholder="请输入学校名称" maxlength="12" clearable @blur="schoolblur" />
+              <el-input
+                v-model="school"
+                ref="school"
+                placeholder="请输入学校名称"
+                maxlength="12"
+                clearable
+                @blur="schoolblur"
+              />
             </label>
             <label>邀请码：
-              <el-input v-model="code" placeholder="请输入邀请码" maxlength="6" clearable @blur="codeblur" />
+              <el-input v-model="code" placeholder="请输入邀请码" maxlength="6" clearable @blur="codeblur"/>
             </label>
             <label>账号：
-              <el-input v-model="name" placeholder="请输入账号" maxlength="16" clearable @blur="nameblur" />
+              <el-input v-model="name" placeholder="请输入账号" maxlength="16" clearable @blur="nameblur"/>
             </label>
             <label>密码：
-              <el-input v-model="passwd" placeholder="请输入密码" maxlength="16" show-password @blur="passwdblur" />
+              <el-input v-model="passwd" placeholder="请输入密码" maxlength="16" show-password @blur="passwdblur"/>
             </label>
             <el-button class="btn" type="primary" :disabled="isShow" @click="register">
               注册
@@ -28,7 +35,7 @@
             <p class="tips" @click="login">
               已有账号？<span>去登录></span>
             </p>
-          </div>
+          </form>
         </div>
       </div>
     </div>
@@ -40,6 +47,9 @@ import axios from 'axios'
 
 export default {
   name: 'Register',
+  head: {
+    title: '注册 - 宿舍管理系统'
+  },
   data () {
     return {
       code: '',
@@ -52,6 +62,9 @@ export default {
       namestate: false,
       isShow: false
     }
+  },
+  mounted () {
+    this.$refs.school.focus()
   },
   methods: {
     handleCommand (command) {
@@ -191,7 +204,6 @@ export default {
   height: 100vh;
   margin: 0;
   position: relative;
-  background-color: var(--loginbg)!important;
 
   .l-main {
     width: 80%;
@@ -262,12 +274,14 @@ export default {
             margin: 20px 0;
             letter-spacing: 10px;
           }
-          .tips{
+
+          .tips {
             margin-top: 5px;
             cursor: pointer;
             text-align: center;
             letter-spacing: 2px;
-            span{
+
+            span {
               color: var(--red);
             }
           }

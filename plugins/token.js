@@ -1,8 +1,14 @@
 export default ({ app, store }) => {
   // 获取到session中store数据 有就存入
-  if (sessionStorage.getItem('store')) {
-    const token = sessionStorage.getItem('store')
-    store.commit('uptoken', token)
+  if (sessionStorage.getItem('store') || localStorage.getItem('token')) {
+    if (localStorage.getItem('token')) {
+      const token = localStorage.getItem('token')
+      store.commit('uptoken', token)
+    }
+    if (sessionStorage.getItem('store')) {
+      const token = sessionStorage.getItem('store')
+      store.commit('uptoken', token)
+    }
   }
   // 获取到暗夜模式状态 有就存入
   if (sessionStorage.getItem('dark')) {
@@ -19,11 +25,11 @@ export default ({ app, store }) => {
     sessionStorage.setItem('dark', store.state.dark)
   })
   //  暗夜模式切换
-  if (store.state.dark === '0') {
-    const html = document.querySelector('html')
-    html.dataset.theme = 'light'
-  } else {
+  if (store.state.dark === '1') {
     const html = document.querySelector('html')
     html.dataset.theme = 'dark'
+  } else {
+    const html = document.querySelector('html')
+    html.dataset.theme = 'light'
   }
 }

@@ -3,8 +3,7 @@
     <ul class="school-nav">
       <template v-for="(item,index) in school.rows">
         <li :key="index" :class="item.name == active? 'list active':'list'" @click="nav_change(item.name)">
-          {{ item.name }}
-          <i class="el-icon-close delete" @click="deopen(item.id)"/>
+          <p>{{ item.name }} <i class="el-icon-close delete" @click="deopen(item.id)" /></p>
         </li>
       </template>
       <li>
@@ -24,27 +23,26 @@
           border
           :tree-props="{children: 'building', hasChildren: 'hasChildren'}"
         >
-          <el-table-column label="全称">
+          <el-table-column label="全称" class-name="of" min-width="350">
             <template slot-scope="scope">
-              <div style="display: flex;justify-content: space-around;align-items: center">
-                <span style="line-height: 39px">{{ scope.row.of }}</span>
-                <el-button type="primary" icon="el-icon-edit" @click="addfloor(scope.row.id)" v-if="scope.row.level == 2">
-                  添加楼层
-                </el-button>
-              </div>
+              <span style="line-height: 39px">{{ scope.row.of }}</span>
+              <el-button v-if="scope.row.level == 2" type="primary" icon="el-icon-edit" @click="addfloor(scope.row.id)">
+                添加楼层
+              </el-button>
             </template>
           </el-table-column>
           <el-table-column
             prop="name"
             label="园区/楼层"
+            width="150"
           />
-          <el-table-column>
+          <el-table-column width="180">
             <template slot="header">
               <div style="display: flex;justify-content: space-around;align-items: center;width: 100%">
                 <span style="line-height: 39px">操作</span>
                 <el-button type="primary" icon="el-icon-edit" @click="addpark">
                   添加园区
-                  <input type="hidden" v-for="(item,index) in fschool" :key="index" ref="id" :value="item.id">
+                  <input v-for="(item,index) in fschool" :key="index" ref="id" type="hidden" :value="item.id">
                 </el-button>
               </div>
             </template>
@@ -85,6 +83,9 @@ export default {
       ids: []
     }
   },
+  head: {
+    title: '学校管理 - 宿舍管理系统'
+  },
   computed: {
     fschool () {
       return this.school_rows.filter(item => JSON.stringify(item).includes(this.active))
@@ -92,8 +93,16 @@ export default {
   },
   created () {
     this.index()
+    if (!this.$store.state.token) {
+      this.$router.push('/login')
+    }
   },
   mounted () {
+    const reload = sessionStorage.getItem('reload')
+    if (reload === '1') {
+      sessionStorage.setItem('reload', '0')
+      this.$router.go(0)
+    }
     this.active = this.$route.query.ref
   },
   methods: {
@@ -288,7 +297,7 @@ export default {
       font-size: 16px;
       color: var(--tips);
 
-      .delete:hover {
+      .delete{
         color: var(--red);
       }
     }
@@ -308,11 +317,36 @@ export default {
   }
 
   /deep/ .cell {
-    //width: 100%;
-    //display: flex;
-    //align-items: center;
-    //justify-content: space-evenly;
     text-align: left;
+  }
+
+  /deep/ .of .cell button {
+    float: right;
+    margin-right: 10%;
+  }
+}
+@media screen and (max-width: 750px){
+  .school_information {
+    .school-nav {
+      padding: 7.5px 10px;
+      display: flex;
+      flex-wrap: wrap;
+      .list {
+        margin: 2vw 2%;
+        text-align: center;
+        cursor: pointer;
+        font-size: 16px;
+        color: var(--tips);
+        p{
+          width: 130px;
+          text-align: center;
+          overflow:hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          -o-text-overflow:ellipsis;
+        }
+      }
+    }
   }
 }
 </style>

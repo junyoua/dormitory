@@ -30,11 +30,13 @@ export default {
     '@/plugins/filters',
     '@/plugins/axios',
     '@/store/index',
+    { src: '@/plugins/cryptoAES', ssr: false },
     { src: '@/plugins/token', ssr: false }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
+  productionSourceMap: false,
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
@@ -55,10 +57,15 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    proxy: true
+    proxy: true,
+    credential: true
   },
   proxy: {
-    '/api/': { target: 'https://lelekaifa.top', pathRewrite: { '^/api/': '' } }
+    '/api/': {
+      target: 'https://api.hzti.xyz',
+      pathRewrite: { '^/api/': '' },
+      changeOrigin: true
+    }
   },
   router: {
     middleware: 'unknownRoute'
@@ -66,6 +73,8 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    transpile: [/^element-ui/]
+    transpile: [/^element-ui/],
+    // css链接式引入
+    extractCSS: { allChunks: true }
   }
 }

@@ -89,6 +89,7 @@
       <!--添加结束-->
       <el-table
         stripe
+        class="box-table"
         :data="dormitory"
         style="width: 100%"
         :default-sort="{prop: 'date', order: 'descending'}"
@@ -100,12 +101,14 @@
         <el-table-column
           prop="dormitory_name"
           label="宿舍所属"
+          min-width="160"
         />
         <el-table-column
           prop="name"
           label="宿舍名字"
+          width="160"
         />
-        <el-table-column label="宿舍 居住人数/可居住人数">
+        <el-table-column label="宿舍 居住人数/可居住人数" width="200">
           <template slot-scope="scope">
             <span>{{ scope.row.live_number }}/{{ scope.row.number }}</span>
           </template>
@@ -113,8 +116,9 @@
         <el-table-column
           prop="principal"
           label="宿舍长电话号码"
+          min-width="160"
         />
-        <el-table-column label="操作">
+        <el-table-column label="操作" width="180">
           <template slot-scope="scope">
             <el-button
               size="medium"
@@ -136,6 +140,30 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-card class="box-card">
+        <div v-for="(item,index) in dormitory" :key="index" class="item">
+          <div class="box">
+            <p>ID：{{item.id}}</p>
+            <p>所属宿舍：{{item.dormitory_name}}</p>
+            <p>宿舍名字：{{item.name}}</p>
+            <p>宿舍 居住人数/可居住人数：{{ item.live_number }}/{{ item.number }}</p>
+            <p>宿舍长电话：{{item.principal}}</p>
+            <div class="btn">
+              <el-button type="primary"  size="medium" @click="handleUpdata(item.id,item.name,item.number,item.principal)">
+                修 改
+              </el-button>
+              <el-popconfirm
+                icon="el-icon-info"
+                icon-color="red"
+                title="确定删除吗？"
+                @confirm="handleDelete(item.id)"
+              >
+                <el-button slot="reference" type="danger"  size="medium">删除</el-button>
+              </el-popconfirm>
+            </div>
+          </div>
+        </div>
+      </el-card>
     </div>
   </div>
 </template>
@@ -143,6 +171,9 @@
 <script>
 export default {
   name: 'Dormitory',
+  head: {
+    title: '宿舍管理 - 宿舍管理系统'
+  },
   data () {
     return {
       dormitory: [],
@@ -269,11 +300,14 @@ export default {
   width: 100%;
   min-height: 100vh;
   background-color: var(--bg);
-
+  .box-card{
+    display: none;
+  }
   .box {
     width: 100%;
-    height: auto;
-    background-color: var(--white);
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--whitebg);
 
     .add {
       margin: 20px 25px;
@@ -282,6 +316,47 @@ export default {
 
     .block {
       margin: 15px 0;
+    }
+  }
+}
+@media screen and (max-width: 750px) {
+  .dormitory {
+
+    .box {
+
+      .add {
+        margin: 20px 25px;
+        float: right;
+      }
+      /deep/ .el-dialog {
+        width: 95%;
+      }
+    }
+    .box-card{
+      display: block!important;
+      width: 95%;
+      margin: 0 auto 5vw auto;
+      background-color: var(--h5conter);
+      .item{
+        margin: 5vw 0;
+        border-bottom: 1px solid var(--grey);
+        .box{
+          background-color: var(--h5conter);
+          p{
+            margin: 1vw 0;
+            color: var(--menu_item);
+          }
+          .btn{
+            margin: 5vw 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+          }
+        }
+      }
+    }
+    .box-table{
+      display: none;
     }
   }
 }

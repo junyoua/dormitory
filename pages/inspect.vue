@@ -2,23 +2,32 @@
   <div class="inspect">
     <div class="box">
       <!--添加按钮-->
-      <el-button
-        size="medium"
-        type="primary"
-        class="add"
-        @click="dialogFormVisible = true"
-      >
-        <i class="el-icon-edit"/> 添 加 数 据
-      </el-button>
-      <el-dialog  title="添加" :visible.sync="dialogFormVisible">
+      <div class="title-nav">
+        <el-date-picker
+          class="date"
+          v-model="datevalue"
+          type="date"
+          placeholder="日期搜索"
+        >
+        </el-date-picker>
+        <el-button
+          size="medium"
+          type="primary"
+          class="add"
+          @click="dialogFormVisible = true"
+        >
+          <i class="el-icon-edit"/> 添 加 数 据
+        </el-button>
+      </div>
+      <el-dialog title="添加" :visible.sync="dialogFormVisible">
         <div class="block">
           <div class="el-form-item">
-          <span class="demonstration">楼 层：</span>
-          <el-cascader
-            v-model="value"
-            placeholder="请选择楼层"
-            :options="floordata"
-          />
+            <span class="demonstration">楼 层：</span>
+            <el-cascader
+              v-model="value"
+              placeholder="请选择楼层"
+              :options="floordata"
+            />
           </div>
         </div>
         <div class="block">
@@ -26,7 +35,7 @@
             <el-form-item label="宿 舍 :">
               <el-select v-model="dormitory" placeholder="请选择楼层再选择宿舍">
                 <template v-for="(item,index) in dormitorydata">
-                  <el-option :key="index" :label="item.label" :value="item.value"/>
+                  <el-option :key="index" :label="item.label" :value="item.value" />
                 </template>
               </el-select>
             </el-form-item>
@@ -37,7 +46,7 @@
             <el-form-item label="床 :">
               <el-select v-model="p_bed" placeholder="床的分数">
                 <template v-for="(item,index) in num">
-                  <el-option :key="index" :label="item" :value="index"/>
+                  <el-option :key="index" :label="item" :value="index" />
                 </template>
               </el-select>
             </el-form-item>
@@ -48,7 +57,7 @@
             <el-form-item label="物品摆放:">
               <el-select v-model="p_valuables" placeholder="物品摆放的分数">
                 <template v-for="(item,index) in num">
-                  <el-option :key="index" :label="item" :value="index"/>
+                  <el-option :key="index" :label="item" :value="index" />
                 </template>
               </el-select>
             </el-form-item>
@@ -59,7 +68,7 @@
             <el-form-item label="风 扇:">
               <el-select v-model="p_fan" placeholder="风扇的分数">
                 <template v-for="(item,index) in num">
-                  <el-option :key="index" :label="item" :value="index"/>
+                  <el-option :key="index" :label="item" :value="index" />
                 </template>
               </el-select>
             </el-form-item>
@@ -70,7 +79,7 @@
             <el-form-item label="电 灯:">
               <el-select v-model="p_lamp" placeholder="灯的分数">
                 <template v-for="(item,index) in num">
-                  <el-option :key="index" :label="item" :value="index"/>
+                  <el-option :key="index" :label="item" :value="index" />
                 </template>
               </el-select>
             </el-form-item>
@@ -81,7 +90,7 @@
             <el-form-item label="阳 台:">
               <el-select v-model="p_balcony" placeholder="阳台的分数">
                 <template v-for="(item,index) in num">
-                  <el-option :key="index" :label="item" :value="index"/>
+                  <el-option :key="index" :label="item" :value="index" />
                 </template>
               </el-select>
             </el-form-item>
@@ -92,7 +101,7 @@
             <el-form-item label="烟 头:">
               <el-select v-model="p_smoke" placeholder="烟头的分数">
                 <template v-for="(item,index) in num">
-                  <el-option :key="index" :label="item" :value="index"/>
+                  <el-option :key="index" :label="item" :value="index" />
                 </template>
               </el-select>
             </el-form-item>
@@ -103,7 +112,7 @@
             <el-form-item label="水 电:">
               <el-select v-model="p_water_electricity" placeholder="水电的分数">
                 <template v-for="(item,index) in num">
-                  <el-option :key="index" :label="item" :value="index"/>
+                  <el-option :key="index" :label="item" :value="index" />
                 </template>
               </el-select>
             </el-form-item>
@@ -114,7 +123,7 @@
             <el-form-item label="地 板:">
               <el-select v-model="p_floor" placeholder="地板的分数">
                 <template v-for="(item,index) in num">
-                  <el-option :key="index" :label="item" :value="index"/>
+                  <el-option :key="index" :label="item" :value="index" />
                 </template>
               </el-select>
             </el-form-item>
@@ -125,7 +134,7 @@
             <el-form-item label="垃圾桶:">
               <el-select v-model="p_dustbin" placeholder="垃圾桶的分数">
                 <template v-for="(item,index) in num">
-                  <el-option :key="index" :label="item" :value="index"/>
+                  <el-option :key="index" :label="item" :value="index" />
                 </template>
               </el-select>
             </el-form-item>
@@ -136,7 +145,7 @@
             <el-form-item label="厕 所:">
               <el-select v-model="p_toilet" placeholder="厕所的分数">
                 <template v-for="(item,index) in num">
-                  <el-option :key="index" :label="item" :value="index"/>
+                  <el-option :key="index" :label="item" :value="index" />
                 </template>
               </el-select>
             </el-form-item>
@@ -151,13 +160,13 @@
           </el-button>
         </div>
       </el-dialog>
-      <el-dialog  title="修改" :visible.sync="dialogFormVisible1">
+      <el-dialog title="修改" :visible.sync="dialogFormVisible1">
         <div class="block">
           <el-form>
             <el-form-item label="床 :">
               <el-select v-model="p_bed" placeholder="床的分数">
                 <template v-for="(item,index) in num1">
-                  <el-option :key="index" :label="item" :value="index"/>
+                  <el-option :key="index" :label="item" :value="index" />
                 </template>
               </el-select>
             </el-form-item>
@@ -168,7 +177,7 @@
             <el-form-item label="物品摆放:">
               <el-select v-model="p_valuables" placeholder="物品摆放的分数">
                 <template v-for="(item,index) in num1">
-                  <el-option :key="index" :label="item" :value="index"/>
+                  <el-option :key="index" :label="item" :value="index" />
                 </template>
               </el-select>
             </el-form-item>
@@ -179,7 +188,7 @@
             <el-form-item label="风 扇:">
               <el-select v-model="p_fan" placeholder="风扇的分数">
                 <template v-for="(item,index) in num1">
-                  <el-option :key="index" :label="item" :value="index"/>
+                  <el-option :key="index" :label="item" :value="index" />
                 </template>
               </el-select>
             </el-form-item>
@@ -190,7 +199,7 @@
             <el-form-item label="电 灯:">
               <el-select v-model="p_lamp" placeholder="灯的分数">
                 <template v-for="(item,index) in num1">
-                  <el-option :key="index" :label="item" :value="index"/>
+                  <el-option :key="index" :label="item" :value="index" />
                 </template>
               </el-select>
             </el-form-item>
@@ -201,7 +210,7 @@
             <el-form-item label="阳 台:">
               <el-select v-model="p_balcony" placeholder="阳台的分数">
                 <template v-for="(item,index) in num1">
-                  <el-option :key="index" :label="item" :value="index"/>
+                  <el-option :key="index" :label="item" :value="index" />
                 </template>
               </el-select>
             </el-form-item>
@@ -212,7 +221,7 @@
             <el-form-item label="烟 头:">
               <el-select v-model="p_smoke" placeholder="烟头的分数">
                 <template v-for="(item,index) in num1">
-                  <el-option :key="index" :label="item" :value="index"/>
+                  <el-option :key="index" :label="item" :value="index" />
                 </template>
               </el-select>
             </el-form-item>
@@ -223,7 +232,7 @@
             <el-form-item label="水 电:">
               <el-select v-model="p_water_electricity" placeholder="水电的分数">
                 <template v-for="(item,index) in num1">
-                  <el-option :key="index" :label="item" :value="index"/>
+                  <el-option :key="index" :label="item" :value="index" />
                 </template>
               </el-select>
             </el-form-item>
@@ -234,7 +243,7 @@
             <el-form-item label="地 板:">
               <el-select v-model="p_floor" placeholder="地板的分数">
                 <template v-for="(item,index) in num1">
-                  <el-option :key="index" :label="item" :value="index"/>
+                  <el-option :key="index" :label="item" :value="index" />
                 </template>
               </el-select>
             </el-form-item>
@@ -245,7 +254,7 @@
             <el-form-item label="垃圾桶:">
               <el-select v-model="p_dustbin" placeholder="垃圾桶的分数">
                 <template v-for="(item,index) in num1">
-                  <el-option :key="index" :label="item" :value="index"/>
+                  <el-option :key="index" :label="item" :value="index" />
                 </template>
               </el-select>
             </el-form-item>
@@ -256,14 +265,14 @@
             <el-form-item label="厕 所:">
               <el-select v-model="p_toilet" placeholder="厕所的分数">
                 <template v-for="(item,index) in num1">
-                  <el-option :key="index" :label="item" :value="index"/>
+                  <el-option :key="index" :label="item" :value="index" />
                 </template>
               </el-select>
             </el-form-item>
           </el-form>
         </div>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">
+          <el-button @click="dialogFormVisible1 = false">
             取 消
           </el-button>
           <el-button type="primary" @click="submit1">
@@ -274,19 +283,22 @@
       <!--添加结束-->
       <el-table
         stripe
+        class="box-table"
+        :cell-class-name="cellClassName"
         :data="inspect"
-        style="width: 100%"
         :default-sort="{prop: 'date', order: 'descending'}"
+        @cell-dblclick="godetails"
       >
         <el-table-column
           prop="of"
           label="所属全称"
+          width="220"
         />
         <el-table-column
           prop="dormitory_name"
           label="宿舍"
         />
-        <el-table-column label="宿舍 居住人数/可居住人数">
+        <el-table-column label="宿舍 居住人数/可居住人数" width="190">
           <template slot-scope="scope">
             <span>{{ scope.row.live_number }}/{{ scope.row.number }}</span>
           </template>
@@ -294,10 +306,12 @@
         <el-table-column
           prop="principal"
           label="宿舍长电话"
+          width="200"
         />
         <el-table-column
           label="总分"
           sortable
+          width="160"
         >
           <template slot-scope="scope">
             <el-tag v-if="scope.row.total >= 90" effect="dark" type="success">
@@ -314,12 +328,13 @@
         <el-table-column
           label="创建时间"
           sortable
+          width="180"
         >
           <template slot-scope="scope">
             <span v-show="scope.row.createtime">{{ scope.row.createtime | timeFormater }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" width="180">
           <template slot-scope="scope">
             <el-button
               size="medium"
@@ -341,19 +356,62 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-card class="box-card">
+        <div v-for="(item,index) in inspect" :key="index" class="item" >
+          <div class="box">
+            <div @click="godetails1(item.id)">
+            <p>所属全称：{{item.of}}</p>
+            <p>宿舍：{{item.dormitory_name}}</p>
+            <p>宿舍 居住人数/可居住人数：{{ item.live_number }}/{{ item.number }}</p>
+            <p>宿舍长电话：{{ item.principal }}</p>
+            <p>总分：
+              <el-tag v-if="item.total >= 90" effect="dark" type="success">
+              {{ item.total }}
+            </el-tag>
+              <el-tag v-else-if="item.total >= 60" effect="dark">
+                {{ item.total }}
+              </el-tag>
+              <el-tag v-else effect="dark" type="danger">
+                {{item.total }}
+              </el-tag>
+            </p>
+            <p>创建时间：{{ item.createtime | timeFormater }}</p>
+            </div>
+            <div class="btn">
+              <el-button type="primary"  size="medium" @click="handleUpdata(item.id,item.bed,item.dustbin,item.fan,item.lamp,item.balcony,item.smoke,item.water_electricity,item.floor,item.valuables,item.toilet)">
+                修 改
+              </el-button>
+              <el-popconfirm
+                icon="el-icon-info"
+                icon-color="red"
+                title="确定删除吗？"
+                @confirm="handleDelete(item.id)"
+              >
+                <el-button slot="reference" type="danger"  size="medium">删除</el-button>
+              </el-popconfirm>
+            </div>
+          </div>
+        </div>
+      </el-card>
     </div>
   </div>
 </template>
 
 <script>
+import dayjs from 'dayjs'
+
 export default {
   name: 'Inspect',
+  head: {
+    title: '评分管理 - 宿舍管理系统'
+  },
   data () {
     return {
       value: [],
       inspect: [],
       floordata: [],
       dormitorydata: [],
+      datevalue: null,
       dormitory: null,
       dialogTableVisible: false,
       dialogFormVisible: false,
@@ -388,12 +446,51 @@ export default {
       if (newdata === false) {
         this.p_id = this.p_bed = this.p_dustbin = this.p_fan = this.p_balcony = this.p_lamp = this.p_smoke = this.p_water_electricity = this.p_floor = this.p_valuables = this.p_toilet = ''
       }
+    },
+    datevalue (newdata) {
+      const time = dayjs(this.datevalue).format('YYYY-MM-DD')
+      if (newdata !== null) {
+        this.$axios.post('api/api/dormitory/inspect', { time }).then((res) => {
+          this.inspect = res.data.data.rows
+          this.inspect.reverse()
+        })
+      } else {
+        this.$axios.post('api/api/dormitory/inspect').then((res) => {
+          this.inspect = res.data.data.rows
+          this.inspect.reverse()
+        })
+      }
     }
   },
   created () {
     this.getinspect()
   },
   methods: {
+    godetails (row) {
+      if (row) {
+        this.$router.push({
+          name: 'inspect_details',
+          params: { id: row.id }
+        })
+      }
+    },
+    godetails1 (id) {
+      if (id) {
+        this.$router.push({
+          name: 'inspect_details',
+          params: { id }
+        })
+      }
+    },
+    // 获取id
+    cellClassName ({
+      row,
+      column,
+      rowIndex,
+      columnIndex
+    }) {
+      row.index = rowIndex
+    },
     getinspect () {
       this.$axios.post('api/api/dormitory/inspect').then((res) => {
         this.inspect = res.data.data.rows
@@ -519,30 +616,119 @@ export default {
   width: 100%;
   height: 100%;
   background-color: var(--bg);
-
+  .box-card{
+    display: none;
+  }
   .box {
     width: 100%;
-    height: auto;
-    background-color: var(--white);
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--whitebg);
 
-    .add {
-      margin: 20px 25px;
-      float: right;
+    .title-nav {
+      display: flex;
+      align-items: center;
+      justify-content: right;
+      padding: 20px 5%;
+
+      .date {
+        width: auto;
+        margin: 0 20px;
+      }
     }
-    /deep/.el-dialog__body{
+
+    /deep/ .el-dialog {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-top: 0 !important;
+      transform: translate(-50%, -50%);
+    }
+
+    /deep/ .el-dialog__body {
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      .el-form-item{
+
+      .el-form-item {
         display: flex;
         align-items: center;
         justify-content: space-between;
       }
+
       .block {
         width: 50%;
         margin: 10px 0;
       }
+    }
+  }
+}
+
+@media screen and (max-width: 750px) {
+  .inspect {
+    .box {
+      .title-nav {
+        padding: 10px 3%;
+
+        .date {
+          width: auto;
+          margin: 0 20px;
+          /deep/.el-input__inner{
+            padding-right: 10px!important;
+          }
+        }
+      }
+
+      /deep/ .el-dialog {
+        width: 90%;
+        transform: translate(-50%, -50%);
+
+        .el-dialog__body {
+            padding: 10px 10px;
+          .block {
+            width: 100%;
+            margin: 0;
+            .el-form-item{
+              margin-bottom: 10px;
+              .el-form-item__label{
+                flex: 1;
+                text-align: center;
+              }
+              .demonstration{
+                flex: 1;
+                text-align: center;
+              }
+            }
+          }
+        }
+      }
+    }
+    .box-card{
+      display: block!important;
+      width: 95%;
+      margin: 0 auto 5vw auto;
+      background-color: var(--h5conter);
+      .item{
+        margin: 5vw 0;
+        border-bottom: 1px solid var(--grey);
+        .box{
+          background-color: var(--h5conter);
+          p{
+            margin: 1vw 0;
+            color: var(--menu_item);
+          }
+          .btn{
+            margin: 5vw 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+          }
+        }
+      }
+    }
+    .box-table{
+      display: none;
     }
   }
 }

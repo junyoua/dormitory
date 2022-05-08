@@ -2,14 +2,23 @@
   <div class="repair">
     <div class="box">
       <!--添加按钮-->
-      <el-button
-        size="medium"
-        type="primary"
-        class="add"
-        @click="dialogFormVisible = true"
-      >
-        <i class="el-icon-edit" /> 添 加 数 据
-      </el-button>
+      <div class="title-nav">
+        <el-date-picker
+          class="date"
+          v-model="datevalue"
+          type="date"
+          placeholder="日期搜索"
+        >
+        </el-date-picker>
+        <el-button
+          size="medium"
+          type="primary"
+          class="add"
+          @click="dialogFormVisible = true"
+        >
+          <i class="el-icon-edit"/> 添 加 数 据
+        </el-button>
+      </div>
       <el-dialog title="添加" :visible.sync="dialogFormVisible">
         <div class="block">
           <span class="demonstration">楼 层：</span>
@@ -24,7 +33,7 @@
             <el-form-item label="宿 舍 :">
               <el-select v-model="dormitory" placeholder="请选择宿舍">
                 <template v-for="(item,index) in dormitorydata">
-                  <el-option :key="index" :label="item.label" :value="item.value" />
+                  <el-option :key="index" :label="item.label" :value="item.value"/>
                 </template>
               </el-select>
             </el-form-item>
@@ -94,11 +103,13 @@
       </el-dialog>
       <el-table
         stripe
+        class="box-table"
         :data="repair"
         style="width: 100%"
         :default-sort="{prop: 'date', order: 'descending'}"
       >
         <el-table-column
+          min-width="200"
           prop="of"
           label="所属楼全称"
         />
@@ -109,8 +120,9 @@
         <el-table-column
           prop="content"
           label="维修内容"
+          width="160"
         />
-        <el-table-column label="维修类型">
+        <el-table-column label="维修类型" min-width="160">
           <template slot-scope="scope">
             <el-tag
               type="danger"
@@ -122,8 +134,9 @@
         <el-table-column
           prop="principal"
           label="宿舍长电话号码"
+          width="160"
         />
-        <el-table-column label="维修结果" width="120">
+        <el-table-column label="维修进度" width="120">
           <template slot-scope="scope">
             <el-tag
               v-show="scope.row.status==0"
@@ -148,14 +161,15 @@
           </template>
         </el-table-column>
         <el-table-column
-          label=" 发起维修时间"
+          label="发起维修时间"
           sortable
+          width="160"
         >
           <template slot-scope="scope">
             <span v-show="scope.row.createtime">{{ scope.row.createtime | timeFormater }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" width="180">
           <template slot-scope="scope">
             <el-button
               size="medium"
@@ -177,13 +191,69 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-card class="box-card">
+        <div v-for="(item,index) in repair" :key="index" class="item">
+          <div class="box">
+            <p>所属楼全称：{{item.of}}</p>
+            <p>宿舍名称：{{item.dormitory_name}}</p>
+            <p>维修内容：{{item.content}}</p>
+            <p>维修类型：
+              <el-tag type="danger">
+                {{ item.type }}
+              </el-tag>
+            </p>
+            <p>宿舍长电话：{{item.principal}}</p>
+            <p>维修进度：
+              <el-tag
+                v-show="item.status==0"
+                effect="dark"
+              >
+                已上报
+              </el-tag>
+              <el-tag
+                v-show="item.status==1"
+                type="success"
+                effect="dark"
+              >
+                已维修
+              </el-tag>
+              <el-tag
+                v-show="item.status==2"
+                type="danger"
+                effect="dark"
+              >
+                无法维修
+              </el-tag>
+            </p>
+            <p>报修时间：{{item.createtime | timeFormater }}</p>
+            <div class="btn">
+              <el-button type="primary"  size="medium"   @click="handleUpdata(item.id,item.type,item.content,item.status)">
+                修 改
+              </el-button>
+              <el-popconfirm
+                icon="el-icon-info"
+                icon-color="red"
+                title="确定删除吗？"
+                @confirm="handleDelete(item.id)"
+              >
+                <el-button slot="reference" type="danger"  size="medium">删除</el-button>
+              </el-popconfirm>
+            </div>
+          </div>
+        </div>
+      </el-card>
     </div>
   </div>
 </template>
 
 <script>
+import dayjs from 'dayjs'
+
 export default {
   name: 'Repair',
+  head: {
+    title: '维修管理 - 宿舍管理系统'
+  },
   data () {
     return {
       repair: [],
@@ -191,6 +261,7 @@ export default {
       dormitorydata: [],
       floordata: [],
       dormitory: null,
+      datevalue: null,
       w_type: null,
       w_id: null,
       w_content: null,
@@ -215,6 +286,20 @@ export default {
     dialogFormVisible1 (newdata) {
       if (newdata === false) {
         this.w_id = this.w_type = this.w_content = this.w_status = ''
+      }
+    },
+    datevalue (newdata) {
+      const time = dayjs(this.datevalue).format('YYYY-MM-DD')
+      if (newdata !== null) {
+        this.$axios.post('api/api/dormitory/repair', { time }).then((res) => {
+          this.repair = res.data.data.rows
+          this.repair.reverse()
+        })
+      } else {
+        this.$axios.post('api/api/dormitory/repair').then((res) => {
+          this.repair = res.data.data.rows
+          this.repair.reverse()
+        })
       }
     }
   },
@@ -324,18 +409,108 @@ export default {
   width: 100%;
   min-height: 100vh;
   background-color: var(--bg);
-
+  .box-card{
+    display: none;
+  }
   .box {
     width: 100%;
-    height: auto;
-    background-color: var(--white);
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--whitebg);
 
-    .add {
-      margin: 20px 25px;
-      float: right;
+    .title-nav {
+      display: flex;
+      align-items: center;
+      justify-content: right;
+      padding: 20px 5%;
+
+      .date {
+        width: auto;
+        margin: 0 20px;
+      }
     }
+
+    /deep/ .el-dialog {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-top: 0 !important;
+      transform: translate(-50%, -50%);
+    }
+
     .block {
       margin: 15px 0;
+    }
+  }
+}
+
+@media screen and (max-width: 750px) {
+  .repair {
+    .box {
+      .title-nav {
+        padding: 10px 3%;
+
+        .date {
+          width: auto;
+          margin: 0 20px;
+          /deep/.el-input__inner{
+            padding-right: 10px!important;
+          }
+        }
+      }
+
+      /deep/ .el-dialog {
+        width: 95%;
+        transform: translate(-50%, -50%);
+
+        .el-dialog__body {
+          padding: 10px 15px;
+
+          .block {
+            width: 100%;
+
+            .el-form-item {
+              margin-bottom: 10px;
+
+              .el-form-item__label {
+                flex: 1;
+                text-align: center;
+              }
+
+              .demonstration {
+                flex: 1;
+                text-align: center;
+              }
+            }
+          }
+        }
+      }
+    }
+    .box-card{
+      display: block!important;
+      width: 95%;
+      margin: 0 auto 5vw auto;
+      background-color: var(--h5conter);
+      .item{
+        margin: 5vw 0;
+        border-bottom: 1px solid var(--grey);
+        .box{
+          background-color: var(--h5conter);
+          p{
+            margin: 1vw 0;
+            color: var(--menu_item);
+          }
+          .btn{
+            margin: 5vw 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+          }
+        }
+      }
+    }
+    .box-table{
+      display: none;
     }
   }
 }

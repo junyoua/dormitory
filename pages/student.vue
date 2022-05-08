@@ -8,7 +8,7 @@
         class="add"
         @click="dialogFormVisible = true"
       >
-        <i class="el-icon-edit" /> 添 加 数 据
+        <i class="el-icon-edit"/> 添 加 数 据
       </el-button>
       <el-dialog title="添加" :visible.sync="dialogFormVisible">
         <div class="block">
@@ -24,7 +24,7 @@
             <el-form-item label="宿 舍 :">
               <el-select v-model="dormitory" placeholder="请选择宿舍">
                 <template v-for="(item,index) in dormitorydata">
-                  <el-option :key="index" :label="item.name" :value="item.id" />
+                  <el-option :key="index" :label="item.name" :value="item.id"/>
                 </template>
               </el-select>
             </el-form-item>
@@ -35,7 +35,7 @@
             <el-form-item label="班 级 :">
               <el-select v-model="student_class" placeholder="请选择班级">
                 <template v-for="(item,index) in studentclass">
-                  <el-option :key="index" :label="item.label" :value="item.value" />
+                  <el-option :key="index" :label="item.label" :value="item.value"/>
                 </template>
               </el-select>
             </el-form-item>
@@ -89,7 +89,7 @@
             <el-form-item label="宿 舍 :">
               <el-select v-model="dormitory" placeholder="请选择宿舍">
                 <template v-for="(item,index) in dormitorydata">
-                  <el-option :key="index" :label="item.name" :value="item.id" />
+                  <el-option :key="index" :label="item.name" :value="item.id"/>
                 </template>
               </el-select>
             </el-form-item>
@@ -100,7 +100,7 @@
             <el-form-item label="班 级 :">
               <el-select v-model="student_class" placeholder="请选择班级">
                 <template v-for="(item,index) in studentclass">
-                  <el-option :key="index" :label="item.label" :value="item.value" />
+                  <el-option :key="index" :label="item.label" :value="item.value"/>
                 </template>
               </el-select>
             </el-form-item>
@@ -135,46 +135,52 @@
       <!--添加结束-->
       <el-table
         stripe
+        class="box-table"
         :data="student"
         style="width: 100%"
-        :default-sort = "{prop: 'student_number', order: 'ascending'}"
+        :default-sort="{prop: 'student_number', order: 'descending'}"
       >
         <el-table-column
+          sortable
           prop="student_number"
           label="学号"
+          width="130"
         />
         <el-table-column
           prop="class_name"
           label="班级"
+          min-width="150"
         />
         <el-table-column
           prop="name"
           label="姓名"
+          width="150"
         />
-        <el-table-column label="性别">
+        <el-table-column label="性别"  width="150">
           <template slot-scope="scope">
-            <i v-show="scope.row.sex==0" class="el-icon-male" style="color: var(--blue);font-size: 20px;" />
-            <i v-show="scope.row.sex==1" class="el-icon-female" style="color: var(--red);font-size: 20px" />
+            <i v-show="scope.row.sex==0" class="el-icon-male" style="color: #409EFF;font-size: 20px;"/>
+            <i v-show="scope.row.sex==1" class="el-icon-female" style="color: var(--red);font-size: 20px"/>
           </template>
         </el-table-column>
         <el-table-column
           prop="dormitory_name"
           label="宿舍"
+          width="150"
         />
         <el-table-column
           label="添加时间"
-          sortable
+          width="160"
         >
           <template slot-scope="scope">
             <span v-show="scope.row.createtime">{{ scope.row.createtime | timeFormater }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" width="180">
           <template slot-scope="scope">
             <el-button
               size="medium"
               type="primary"
-              @click="handleUpdata(scope.row.id,scope.row.name,scope.row.sex,scope.row.class_name,scope.row.dormitory_name)"
+              @click="handleUpdata(scope.row.id,scope.row.name,scope.row.sex,scope.row.class_name,scope.row.dormitory_name,scope.row.dormitory_id)"
             >
               修改
             </el-button>
@@ -191,6 +197,34 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-card class="box-card">
+        <div v-for="(item,index) in student" :key="index" class="item">
+          <div class="box">
+            <p>学生学号：{{item.student_number}}</p>
+            <p>班级：{{item.class_name}}</p>
+            <p>名字：{{item.name}}</p>
+            <p>性别：
+              <i v-show="item.sex==0" class="el-icon-male" style="color: #409EFF;font-size: 20px;"/>
+              <i v-show="item.sex==1" class="el-icon-female" style="color: var(--red);font-size: 20px"/>
+            </p>
+            <p>宿舍：{{item.dormitory_name}}</p>
+            <p>添加时间：{{ item.createtime | timeFormater }}</p>
+            <div class="btn">
+              <el-button type="primary"  size="medium" @click="handleUpdata(item.id,item.name,item.sex,item.class_name,item.dormitory_name,item.dormitory_id)">
+                修 改
+              </el-button>
+              <el-popconfirm
+                icon="el-icon-info"
+                icon-color="red"
+                title="确定删除吗？"
+                @confirm="handleDelete(item.id)"
+              >
+                <el-button slot="reference" type="danger"  size="medium">删除</el-button>
+              </el-popconfirm>
+            </div>
+          </div>
+        </div>
+      </el-card>
     </div>
   </div>
 </template>
@@ -199,6 +233,9 @@
 
 export default {
   name: 'Student',
+  head: {
+    title: '学生管理 - 宿舍管理系统'
+  },
   data () {
     return {
       student: [],
@@ -206,6 +243,7 @@ export default {
       floor: [],
       dormitorydata: [],
       dormitory: null,
+      dormitoryid: null,
       radio: '0',
       s_number: null,
       s_id: null,
@@ -232,6 +270,13 @@ export default {
         this.id = this.s_name = this.student_class = this.dormitory = this.value = ''
         this.radio = '0'
       }
+    },
+    dormitoryid (newdata) {
+      if (newdata !== null) {
+        this.$axios.post('api/api/of/index', { id: newdata }).then((res) => {
+          this.value = res.data.data[0].of_id
+        })
+      }
     }
   },
   created () {
@@ -257,13 +302,14 @@ export default {
         this.studentclass = res.data.data.rows
       })
     },
-    handleUpdata (id, name, sex, classname, dormitoryname) {
+    handleUpdata (id, name, sex, classname, dormitoryname, dormitoryid) {
       this.dialogFormVisible1 = true
       this.s_id = id
       this.s_name = name
       this.radio = sex
       this.student_class = classname
       this.dormitory = dormitoryname
+      this.dormitoryid = dormitoryid
     },
     handleDelete (id) {
       this.$axios.post('api/api/studentclass/student_del', { id }).then((res) => {
@@ -355,15 +401,62 @@ export default {
   .box {
     width: 100%;
     height: auto;
-    background-color: var(--white);
+    overflow: hidden;
+    background-color: var(--whitebg);
 
     .add {
       margin: 20px 25px;
       float: right;
     }
+    /deep/ .el-dialog {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-top: 0 !important;
+      transform: translate(-50%, -50%);
+    }
 
     .block {
       margin: 15px 0;
+    }
+  }
+  .box-card{
+    display: none;
+  }
+}
+
+@media screen and (max-width: 750px) {
+  .student {
+    .box {
+      /deep/ .el-dialog {
+        width: 95%;
+      }
+    }
+    .box-card{
+      display: block!important;
+      width: 95%;
+      margin: 0 auto 5vw auto;
+      background-color: var(--h5conter);
+      .item{
+        margin: 5vw 0;
+        border-bottom: 1px solid var(--grey);
+        .box{
+          background-color: var(--h5conter);
+          p{
+            margin: 1vw 0;
+            color: var(--menu_item);
+          }
+          .btn{
+            margin: 5vw 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+          }
+        }
+      }
+    }
+    .box-table{
+      display: none;
     }
   }
 }
